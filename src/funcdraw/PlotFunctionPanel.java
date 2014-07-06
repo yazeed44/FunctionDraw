@@ -16,6 +16,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -121,7 +123,7 @@ double result1=solveEquation(equation,min);
                 } catch (UnknownFunctionException | UnparsableExpressionException ex) {
                 
                     JOptionPane.showMessageDialog(this, "هنالك خطا في كتابة المعادلة " + "\n" + "امثلة على كتابة معادلات صحيحة" + "2 * x +3" + 
-                            "\n" + "sqrt(x)-3" + "\n" + "(x*4)/x", "خطأ", JOptionPane.ERROR_MESSAGE);
+                            "\n" + "3*x +9" + "\n" + "(x*4)/x", "خطأ", JOptionPane.ERROR_MESSAGE);
                 }
                 
           assert(calc != null);             
@@ -155,7 +157,7 @@ double result1=solveEquation(equation,min);
             }
             if(sorted){
             Collections.sort(results);}
-            System.out.println("results : "+ results);
+            //System.out.println("results : "+ results);
             
             
             return results;
@@ -170,23 +172,23 @@ double result1=solveEquation(equation,min);
                     Double result = this.solveEquation(pEquation, i);
                     //System.out.println("result = " + result);
                     if (result == 0 ){
-                        System.out.println("We got domain  =  it's everything expect " + i);
+                   //     System.out.println("We got domain  =  it's everything expect " + i);
                         exceptions.add(i);
                     }
                     
                     else if (result.toString().equals("NaN")){
-                        System.out.println("We got domain  =  it's everything expect " + i);
+                 //       System.out.println("We got domain  =  it's everything expect " + i);
                         exceptions.add(i);
                     }
                  }
                  catch(java.lang.ArithmeticException ex){
-                     System.out.println("We got domain  =  it's everything expect " + i);
+               //      System.out.println("We got domain  =  it's everything expect " + i);
                      exceptions.add(i);
                  }
                 }
             
              Collections.sort(exceptions);
-             System.out.println(exceptions);
+           //  System.out.println(exceptions);
             return exceptions;
         }
         
@@ -212,6 +214,90 @@ double result1=solveEquation(equation,min);
             return isExceptionsAboveSpectfiedNumber;
         }
         
+          private String inverseFunction(String pEquation){
+            StringBuilder invEquation = new StringBuilder(pEquation);
+            
+            int plusIndex = invEquation.indexOf("+"),minusIndex = invEquation.indexOf("-"),multiplyIndex = invEquation.indexOf("*"),
+                    divisonIndex = invEquation.indexOf("/"),twiceIndex = invEquation.indexOf("^"),rootIndex = invEquation.indexOf("sqrt"),
+                    cosIndex = invEquation.indexOf("cos"),sinIndex = invEquation.indexOf("sin"),tan = invEquation.indexOf("tan")
+                    ;
+                    
+                    Map<String,Integer> indexs = new HashMap();
+                   
+                    
+                    
+                     indexs.put("/",multiplyIndex);
+                    indexs.put("*",divisonIndex);
+                    indexs.put("sqrt",twiceIndex);
+                    indexs.put("^",rootIndex);
+                     indexs.put("-",plusIndex);
+                    indexs.put("+",minusIndex);
+                    
+                    
+                    int exception = 0;
+                    
+            for(String opposite : indexs.keySet()){
+                
+                    try {
+                        if(indexs.get(opposite) == -1){
+                      //      System.out.println("We will throw the opposite of  this : " + opposite);
+                            continue;
+                        }
+                        int index = indexs.get(opposite);
+                        System.out.println("index = " + index + ",opposite = " + opposite);
+                        System.out.println("Equation = " + invEquation.substring(index, index+1));
+                        switch (invEquation.charAt(index)+"") {
+                           
+                            case "sqrt":
+                               // invEquation.deleteCharAt(index);
+                               
+                                
+                                break;
+                            case "^":
+                             //   invEquation.deleteCharAt(index);
+                                break;
+                            case "/":
+                                if(Integer.parseInt(invEquation.charAt(index+1)+"") != exception){
+                                invEquation.deleteCharAt(index);
+                                exception = Integer.parseInt(invEquation.charAt(index)+ "");
+                                invEquation.insert(invEquation.indexOf("x"), invEquation.charAt(index)+"*");
+                                
+                                invEquation.deleteCharAt(index+2);
+                                
+                                System.out.println("Inside / = " + invEquation.toString());}
+                                break;
+                                
+                                 case "*":
+                                     System.out.println(invEquation.substring(index-1, index));
+                                     if(Integer.parseInt(invEquation.substring(index-1,index)) != exception){
+                                invEquation.deleteCharAt(index);
+                                invEquation.insert(invEquation.length(), "/"+invEquation.substring(index-1, index));
+                                exception = Integer.parseInt(invEquation.substring(index-1, index));
+                                invEquation.deleteCharAt(index-1);
+                                
+                                System.out.println("Inside * = "+ invEquation.toString());}
+                                break;
+                            case "+":
+                                
+                                invEquation.deleteCharAt(index);
+                                invEquation.insert(index, opposite);
+                                System.out.println("Inside + = " + invEquation.toString());
+                                break;
+                            case "-":
+                                System.out.println("Inside -");
+                                invEquation.deleteCharAt(index);
+                                invEquation.insert(index, opposite);
+                                break;
+                                
+                           
+                        }
+                    }
+                    catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+                        }
+            return invEquation.toString();
+        }
         
          public String getDomain(String pEquation){
             ArrayList<Double> exceptions = this.getExceptionForDomain(pEquation);
@@ -251,7 +337,7 @@ double result1=solveEquation(equation,min);
         
          //there's alot of bugs
         public String getRange(String pEquation){
-            ArrayList<Double> results = getResults(pEquation,true);
+        /*    ArrayList<Double> results = getResults(pEquation,true);
             
             boolean isItZero = false;
        for (Double result : results) {
@@ -264,8 +350,25 @@ double result1=solveEquation(equation,min);
                 return "مدى الدالة هو جميع الاعداد الحقيقية الموجبة  R+";
             }
             
-            return "مدى الدالة من "+ results.get(0) + "الى موجب مالا نهاية";
+            return "مدى الدالة من "+ results.get(0) + "الى موجب مالا نهاية";*/
             
+            StringBuilder invEquation = new StringBuilder(pEquation);
+            
+            
+            invEquation = new StringBuilder(inverseFunction(invEquation.toString()));
+            System.out.println("Inverse Equation =  "+invEquation.toString());
+            
+            
+            return "مدى الدالة هو " + (this.getDomain(invEquation.toString()).substring(9));
+            
+        }
+        
+        
+      
+        
+        public String getInversedFunction(String pFunction){
+            
+            return "الدالة العكسية هي  : " + this.inverseFunction(pFunction);
         }
         
         public String getZeros(String pEquation){

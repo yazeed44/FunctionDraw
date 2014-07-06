@@ -22,7 +22,8 @@ public class FuncDrawMain extends javax.swing.JFrame {
         initComponents();
         fxText.setText("x");
         graphPanel.setEquation(fxText.getText());
-        this.setTitle("تمثيل المعادلات بيانيا");
+        this.setTitle("النسخة التجريبية  : تمثيل المعادلات بيانيا");
+        this.setResizable(false);
         JOptionPane.showMessageDialog(this, "امثلة على طريقة كتابة الدوال : " + "\n" + "2 * x + cos(x)" + "\n" +"x ^ 2 - 5" +"\n"+ "ملاحظة : "+ "\n"
                 +"يفضل استخدام الاقواس", "", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -142,9 +143,9 @@ public class FuncDrawMain extends javax.swing.JFrame {
         graphPanel.setMaxValue(xMaxInt);
         graphPanel.setEquation(fxStr);
         
-        String message =  "معلومات عن الدالة : " +fxStr+ "\n"+ graphPanel.getDomain(fxStr) + "\n" + graphPanel.getRange(fxStr) + "\n"
+        String message = "هذه المعلومات قد لاتكون دقيقة 100% لان هذه النسخة تجريبية"+"\n" + "معلومات عن الدالة : " +fxStr+ "\n"+ graphPanel.getDomain(fxStr) + "\n" + graphPanel.getRange(fxStr) + "\n"
                 + graphPanel.getSmallestFxValue(fxStr) + "\n" + graphPanel.getYPart(fxStr) + "\n" + graphPanel.getZeros(fxStr)
-                +"\n" + graphPanel.getAverageResult(fxStr) + "\n" + graphPanel.getFuncType(fxStr);
+                +"\n" + graphPanel.getAverageResult(fxStr) + "\n" + graphPanel.getFuncType(fxStr) + "\n" + graphPanel.getInversedFunction(fxStr) ;
      
         JOptionPane.showMessageDialog(this, message,"معلومات عن الدالة", JOptionPane.INFORMATION_MESSAGE);
        
